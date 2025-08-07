@@ -1,0 +1,89 @@
+import json
+tasks = []
+
+def load_tasks(filename="tasks.json"):
+    global tasks
+    try:
+        with open(filename, "r") as f:
+            tasks = json.load(f)
+            print("✅ Tasks loaded successfully.")
+    except FileNotFoundError:
+        tasks = []
+        print("📂 No saved tasks found. Starting fresh.")
+
+def save_tasks(filename="tasks.json"):
+    with open(filename, "w") as f:
+        json.dump(tasks, f, indent=2)
+    print("💾 Tasks saved.")
+
+def show_tasks():
+    if not tasks:
+        print("📭 No tasks available.")
+    else:
+        for idx, task in enumerate(tasks, 1):
+            status = "✅" if task["done"] else "❌"
+            print(f"{idx}. {task['task']} - {status}")
+
+def add_task():
+    task_name = input("Enter task: ")
+    tasks.append({"task": task_name, "done": False})
+    print("📝 Task added.")
+
+def mark_done():
+    show_tasks()
+    try:
+        num = int(input("Enter task number to mark as done: "))
+        tasks[num - 1]["done"] = True
+        print("✅ Task marked as done.")
+    except:
+        print("⚠️ Invalid input.")
+
+def update_task():
+    show_tasks()
+    try:
+        num = int(input("Enter task number to update: "))
+        new_name = input("Enter new task name: ")
+        tasks[num - 1]["task"] = new_name
+        print("✏️ Task updated.")
+    except:
+        print("⚠️ Invalid input.")
+
+def delete_task():
+    show_tasks()
+    try:
+        num = int(input("Enter task number to delete: "))
+        tasks.pop(num - 1)
+        print("🗑️ Task deleted.")
+    except:
+        print("⚠️ Invalid input.")
+
+def main():
+    load_tasks()
+    while True:
+        print("\n📋 TO-DO LIST MENU")
+        print("1. View Tasks")
+        print("2. Add Task")
+        print("3. Mark Task as Done")
+        print("4. Update Task")
+        print("5. Delete Task")
+        print("6. Save and Exit")
+        choice = input("Enter your choice (1-6): ")
+
+        if choice == "1":
+            show_tasks()
+        elif choice == "2":
+            add_task()
+        elif choice == "3":
+            mark_done()
+        elif choice == "4":
+            update_task()
+        elif choice == "5":
+            delete_task()
+        elif choice == "6":
+            save_tasks()
+            print("👋 Goodbye!")
+            break
+        else:
+            print("⚠️ Invalid choice. Try again.")
+
+main()
